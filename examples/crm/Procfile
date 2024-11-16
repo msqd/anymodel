@@ -1,0 +1,3 @@
+api-proxy: uvx --prerelease=allow --from harp-proxy harp server --endpoint frontend=3000:http://localhost:5173/ --endpoint backend=3001:http://localhost:8000/
+backend: uv run hypercorn crm.api:app --reload
+frontend: (cd frontend; pnpm run dev)
