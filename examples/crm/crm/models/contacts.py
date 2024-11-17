@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from hdm.entity import Entity
 from hdm.mapper import Mapper
@@ -12,11 +12,19 @@ class Contact(Entity):
     phone: str = ""
     company: str = ""
     position: str = ""
-    notes: str = ""
+    notes: List[str] = ""
 
 
 class ContactMapper(Mapper[Contact]):
     type = Contact
     name = "contacts"
 
-    fields = ["first_name", "last_name", "email", "phone", "company", "position", "notes"]
+    fields = {
+        "first_name": ...,
+        "last_name": ...,
+        "email": ...,
+        "phone": ...,
+        "company": ...,
+        "position": ...,
+        "notes": ...,
+    }

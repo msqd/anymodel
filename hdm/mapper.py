@@ -56,13 +56,15 @@ class Mapper[TMappedEntity]:
             return self._map[args]
 
         # delegate to storage
-        return self.storage.find(self, *args)
+        return self._store(self.storage.find(self, *args))
 
     def find_all(self) -> Iterable[TMappedEntity]:
         for entity in self.storage.find_all(self):
             yield self._store(entity)
 
-    def _store(self, entity):
+    def _store(self, entity: TMappedEntity | None):
+        if entity is None:
+            return None
         identity = entity.get_identity()
         self._map[tuple((identity.get(x) for x in self.primary_key))] = entity
         return entity

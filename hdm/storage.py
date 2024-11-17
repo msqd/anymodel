@@ -83,7 +83,17 @@ class SqlAlchemyStorage(Storage):
 
     @override
     def find(self, mapper: Mapper, *args) -> Optional[Entity]:
-        return None
+        table = self.get_table_for(mapper.type)
+        criteria = _build_where_clause_arguments(table, dict(zip(mapper.primary_key, args)))
+        with self.engine.connect() as conn:
+            result = conn.execute(table.select().where(*criteria))
+            row = result.fetchone()
+            if row is None:
+                return None
+            entity = mapper.type.model_construct(**row._mapping)
+            entity.set_identity({k: getattr(entity, k) for k in mapper.primary_key})
+            entity.set_clean()
+            return entity
 
     @override
     def find_all(self, mapper: Mapper) -> Iterable[Entity]:
@@ -94,3 +104,7 @@ class SqlAlchemyStorage(Storage):
                 entity.set_identity({k: getattr(entity, k) for k in mapper.primary_key})
                 entity.set_clean()
                 yield entity
+
+
+def _build_where_clause_arguments(table: Table, criteria: dict[str, Any]) -> list:
+    return [getattr(table.c, col) == val for col, val in criteria.items()]
