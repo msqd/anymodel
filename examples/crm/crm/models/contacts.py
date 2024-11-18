@@ -16,9 +16,6 @@ class Contact(Entity):
 
 
 class ContactMapper(Mapper[Contact]):
-    type = Contact
-    name = "contacts"
-
     fields = {
         "first_name": ...,
         "last_name": ...,

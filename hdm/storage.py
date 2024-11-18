@@ -35,12 +35,12 @@ class SqlAlchemyStorage(Storage):
 
     @override
     def register(self, mapper: Mapper):
-        if mapper.type in self.mappers:
-            raise ValueError(f"Mapper for {mapper.type} already registered.")
-        self.mappers[mapper.type] = mapper
+        if mapper.__type__ in self.mappers:
+            raise ValueError(f"Mapper for {mapper.__type__} already registered.")
+        self.mappers[mapper.__type__] = mapper
 
-        if mapper.type in self.tables:
-            raise ValueError(f"Table for {mapper.type} already registered.")
+        if mapper.__type__ in self.tables:
+            raise ValueError(f"Table for {mapper.__type__} already registered.")
 
         columns = []
 
@@ -50,7 +50,7 @@ class SqlAlchemyStorage(Storage):
         for field in mapper.fields:
             columns.append(Column(field, String))
 
-        self.tables[mapper.type] = Table(mapper.name, self.metadata, *columns)
+        self.tables[mapper.__type__] = Table(mapper.__tablename__, self.metadata, *columns)
 
     @override
     def upgrade(self):
@@ -83,14 +83,14 @@ class SqlAlchemyStorage(Storage):
 
     @override
     def find(self, mapper: Mapper, *args) -> Optional[Entity]:
-        table = self.get_table_for(mapper.type)
+        table = self.get_table_for(mapper.__type__)
         criteria = _build_where_clause_arguments(table, dict(zip(mapper.primary_key, args)))
         with self.engine.connect() as conn:
             result = conn.execute(table.select().where(*criteria))
             row = result.fetchone()
             if row is None:
                 return None
-            entity = mapper.type.model_construct(**row._mapping)
+            entity = mapper.__type__.model_construct(**row._mapping)
             entity.set_identity({k: getattr(entity, k) for k in mapper.primary_key})
             entity.set_clean()
             return entity
@@ -98,9 +98,9 @@ class SqlAlchemyStorage(Storage):
     @override
     def find_all(self, mapper: Mapper) -> Iterable[Entity]:
         with self.engine.connect() as conn:
-            result = conn.execute(self.get_table_for(mapper.type).select())
+            result = conn.execute(self.get_table_for(mapper.__type__).select())
             for row in result:
-                entity = mapper.type.model_construct(**row._mapping)
+                entity = mapper.__type__.model_construct(**row._mapping)
                 entity.set_identity({k: getattr(entity, k) for k in mapper.primary_key})
                 entity.set_clean()
                 yield entity

@@ -13,8 +13,8 @@ class Restaurant(Entity):
 
 
 class RestaurantMapper(Mapper[Restaurant]):
-    type = Restaurant
-    name = "restaurants"
+    __type__ = Restaurant
+    __tablename__ = "restaurants"
 
     fields = ["name", "address", "phone"]
     primary_key = "id"

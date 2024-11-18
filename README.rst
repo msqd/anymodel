@@ -10,6 +10,15 @@ Migrations are automatically handled by ``hdm``, you just have to describe the c
 your database to apply the schema changes. As it sounds and is dangerous, a few safeguards are there to avoid data
 loss due to a massive column drop.
 
+Journal
+:::::::
+
+18 nov 2024
+-----------
+
+* writing some tests
+* reworking (in the test, wip) the mapper interface to it's more decoupled and able to work with more than one underlying storage.
+
 
 TODO
 ::::

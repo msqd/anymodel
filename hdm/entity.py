@@ -6,6 +6,9 @@ class Entity(BaseModel):
     def set_clean(self):
         self.__pydantic_fields_set__ = set()
 
+    def is_clean(self):
+        return not len(self.__pydantic_fields_set__)
+
     def get_identity(self) -> dict | None:
         return getattr(self,_IDENTITY_ATTRIBUTE, None)
 
