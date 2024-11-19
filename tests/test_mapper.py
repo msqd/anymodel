@@ -3,7 +3,7 @@ from typing import Type, TypedDict, Collection, MutableMapping, Mapping
 from pyheck.pyheck import snake
 
 from hdm.entity import Entity
-from hdm.mapper import IdentityMap
+from hdm.utilities.identity_map import IdentityMap
 from hdm.storage import Storage
 from ._models import Hero
 

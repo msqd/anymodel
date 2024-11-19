@@ -29,11 +29,19 @@ We should be able to manage lazy relations, and even lazy fields from secondary 
 Journal
 :::::::
 
+19 nov 2024
+-----------
+
+* reworking mapper vs storage api. Storage should probably not know about mapper, and mapper should be responsible for
+  mapping. Wow.
+
+
 18 nov 2024
 -----------
 
 * writing some tests
-* reworking (in the test, wip) the mapper interface to it's more decoupled and able to work with more than one underlying storage.
+* reworking (in the test, wip) the mapper interface to it's more decoupled and able to work with more than one
+  underlying storage.
 
 
 TODO

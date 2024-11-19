@@ -13,7 +13,9 @@ class Entity(BaseModel):
         return getattr(self,_IDENTITY_ATTRIBUTE, None)
 
     def set_identity(self, identity: dict):
-        setattr(self, _IDENTITY_ATTRIBUTE, identity)
+        setattr(self, _IDENTITY_ATTRIBUTE, {k: str(identity[k]) for k in identity})
+
+        # maybe not the right place
         self.__dict__.update(identity)
 
     def detach(self):

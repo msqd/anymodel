@@ -5,5 +5,5 @@ export const Route = createLazyFileRoute("/")({
 });
 
 function RouteComponent() {
-  return "Hello, world.";
+  return "Welcome to this boring and feature-less contact manager.";
 }

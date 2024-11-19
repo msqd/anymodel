@@ -1,4 +1,4 @@
-from examples.crm.crm.models.contacts import ContactMapper, Contact
+from crm.models.contacts import ContactMapper, Contact
 from hdm.storage import SqlAlchemyStorage
 
 
@@ -13,9 +13,6 @@ def main():
     contact.email = "jane@example.com"
     mapper.save(contact)
     print(repr(contact))
-
-    same_contact = mapper.find(contact.id)
-    print(repr(same_contact))
 
 
 if __name__ == "__main__":
