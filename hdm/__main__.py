@@ -1,8 +1,8 @@
 from typing_extensions import Optional
 
-from hdm.entity import Entity
+from hdm.types.entity import Entity
 from hdm.mapper import Mapper
-from hdm.storage import SqlAlchemyStorage
+from hdm.storages.sqlalchemy import SqlAlchemyStorage
 
 
 class Restaurant(Entity):
@@ -23,7 +23,7 @@ class RestaurantMapper(Mapper[Restaurant]):
 def main():
     storage = SqlAlchemyStorage("postgresql://postgres:postgres@localhost:5432")
     mapper = RestaurantMapper(storage)
-    storage.upgrade()
+    storage.setup()
     mapper.save(Restaurant(name="test"))
 
 

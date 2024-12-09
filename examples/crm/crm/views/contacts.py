@@ -20,7 +20,7 @@ class ContactsViewSet:
         ]
 
     async def get(self, request):
-        contact = self.mapper.find_one(request.path_params["id"])
+        contact = self.mapper.find_one_by_pk(request.path_params["id"])
         if contact is None:
             return JSONResponse({"error": "Not found."}, status_code=404)
         return JSONResponse(contact.model_dump(exclude_none=True))

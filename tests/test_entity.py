@@ -1,3 +1,6 @@
+from unittest.mock import Mock
+
+from hdm.types.entity import mapper
 from ._models import Hero
 
 
@@ -25,7 +28,17 @@ def test_identity():
     assert hero.get_identity() is None
 
     hero.set_identity({"id": 42})
-    assert hero.get_identity() == {"id": 42}
+    assert hero.get_identity() == {"id": "42"}
 
     hero.detach()
     assert hero.get_identity() is None
+
+
+def test_mapper():
+    hero = Hero(name="Superman")
+    assert mapper(hero) is None
+
+    mock_mapper = Mock()
+    hero.__mapper__ = mock_mapper
+
+    assert mapper(hero) is mock_mapper

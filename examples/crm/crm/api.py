@@ -10,12 +10,12 @@ from crm import services
 
 @contextlib.asynccontextmanager
 async def lifespan(app):
-    from hdm.storage import SqlAlchemyStorage
+    from hdm.storages.sqlalchemy import SqlAlchemyStorage
     from crm.models.contacts import ContactMapper
 
     storage = SqlAlchemyStorage("postgresql://postgres:postgres@localhost:5432")
     services.set("mappers.contact", ContactMapper(storage))
-    storage.upgrade()
+    storage.setup()
 
     yield
 

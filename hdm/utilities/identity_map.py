@@ -1,7 +1,7 @@
 from typing import MutableMapping, Any
 from weakref import WeakValueDictionary
 
-from hdm.entity import Entity
+from hdm.types.entity import Entity
 
 Identity = tuple[str, ...]
 

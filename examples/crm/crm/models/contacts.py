@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from hdm.entity import Entity
+from hdm.types.entity import Entity
 from hdm.mapper import Mapper
 
 

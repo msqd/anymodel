@@ -1,11 +1,11 @@
 from crm.models.contacts import ContactMapper, Contact
-from hdm.storage import SqlAlchemyStorage
+from hdm.storages.sqlalchemy import SqlAlchemyStorage
 
 
 def main():
     storage = SqlAlchemyStorage("postgresql://postgres:postgres@localhost:5432")
     mapper = ContactMapper(storage)
-    storage.upgrade()
+    storage.setup()
     contact = Contact(first_name="John", last_name="Doe", email="john@example.com")
     mapper.save(contact)
     print(repr(contact))

@@ -1,3 +1,3 @@
-api-proxy: uvx --prerelease=allow --from harp-proxy harp server --endpoint backend=3001:http://localhost:8000/
+api-proxy: uvx --prerelease=allow --from ../../../harp harp server --endpoint backend=3001:http://localhost:8000/
 backend: uv run hypercorn crm.api:app --reload --access-logfile -
 frontend: (cd frontend; pnpm run dev --port 3000)

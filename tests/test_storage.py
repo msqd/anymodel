@@ -1,9 +1,9 @@
 from sqlite3 import OperationalError
 from typing import Optional
 
-from hdm.entity import Entity
+from hdm.types.entity import Entity
 from hdm.mapper import Mapper
-from hdm.storage import SqlAlchemyStorage
+from hdm.storages.sqlalchemy import SqlAlchemyStorage
 import pytest
 
 
@@ -25,7 +25,7 @@ def test_basics():
     with pytest.raises(OperationalError):
         mapper.save(hero)
 
-    storage.upgrade()
+    storage.setup()
 
     hero = Hero(id=1, name="Superman")
     hero = storage.save(hero)

@@ -19,15 +19,28 @@ with nunderlying storages, but the storage implementation should not be tied to 
 Migrations should be automatic, yet not dangerous. Removed fields / tables should require an explicit confirmation from
 the user, yet adding a field should be transparent.
 
-We should be able to work with multiple storages at the same time, and even have a single entity mapped to multiple storages, with a main/secondary logic (for example, an sql storage may be responsible for the key management, and store
+We should be able to work with multiple storages at the same time, and even have a single entity mapped to multiple
+storages, with a main/secondary logic (for example, an sql storage may be responsible for the key management, and store
 the name, and a lucene index may store other things).
 
 We should be able to manage lazy relations, and even lazy fields from secondary storages.
 
 
-
 Journal
 :::::::
+
+7 dec 2024
+----------
+
+* mapper now manages simple one-to-many relations, some things are hardcoded, but it's a start. Relations are lazy
+  loaded, and for now it's necessary to call the .load() method on the loaded entity to populate the related fields.
+
+    -> we may need to autoload data on use? can be done later
+    -> we need a way to chose a load strategy: eager, lazy ... not relevant for some storages, but sql will need it.
+
+* we may need to combine MemoryStorage with MemoryTable from test utilities, as their purpose is the same.
+
+-> the proof of concept in bin/sandbox.py should be refactored into tests, for the stable parts.
 
 19 nov 2024
 -----------

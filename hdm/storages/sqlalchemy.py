@@ -1,23 +1,10 @@
-from typing import Union, Any, Optional, Iterable, override, Mapping
+from typing import Union, Any, override, Optional, Iterable
 
-from sqlalchemy import create_engine, MetaData, URL, Table, Column, Integer, String
+from sqlalchemy import URL, create_engine, MetaData, Column, Integer, String, Table
 
-from hdm.entity import Entity
+from hdm.types.entity import Entity
+from hdm.storages import Storage, ResultMapping
 from hdm.utilities.migrations import automigrate
-
-
-ResultMapping = Mapping[str, Any]
-
-
-class Storage:
-    def add_table(self, tablename: str, primary_key: Iterable[str], fields: Iterable[str]): ...
-    def upgrade(self): ...
-    def delete(self, entity: Entity) -> Entity: ...
-
-    def find_one(self, tablename: str, criteria: dict) -> Optional[ResultMapping]: ...
-    def find_many(self, tablename: str, criteria: dict, *, limit=None, offset=None) -> Iterable[ResultMapping]: ...
-    def insert(self, tablename: str, values: dict) -> ResultMapping: ...
-    def update(self, tablename: str, identity: dict, values: dict) -> None: ...
 
 
 class SqlAlchemyStorage(Storage):
@@ -97,7 +84,7 @@ class SqlAlchemyStorage(Storage):
         self.tables[tablename] = Table(tablename, self.metadata, *columns)
 
     @override
-    def upgrade(self):
+    def setup(self):
         automigrate(self.engine, self.metadata)
 
 
