@@ -11,9 +11,6 @@ class MemoryStorage(Storage):
         self._autoincrements = defaultdict(int)
         self._query_count = 0
 
-    def add_table(self, tablename: str, primary_key: Iterable[str], fields: Iterable[str]):
-        self._tables[tablename] = dict()
-
     def setup(self):
         pass
 
@@ -24,13 +21,14 @@ class MemoryStorage(Storage):
         for row in self.find_many(tablename, criteria, limit=1):
             return row
 
+
     def find_many(
         self,
         tablename: str,
         criteria: dict,
         *,
         limit: Optional[int] = None,
-        offset: Optional[int] = None,
+        offset: Optional[int] = None
     ) -> Iterable[ResultMapping]:
         limit, offset = max(limit, 0) if limit is not None else None, max(offset or 0, 0)
         current = 0
@@ -56,10 +54,15 @@ class MemoryStorage(Storage):
                 current += 1
 
     def insert(self, tablename: str, values: dict) -> ResultMapping:
-        self._autoincrements[tablename] += 1
-        pk = str(self._autoincrements[tablename])
-        self._tables[tablename][pk] = {**values, "id": pk}
-        return {"id": pk}
+        if not "id" in values:
+            self._autoincrements[tablename] += 1
+            identity = {'id': str(self._autoincrements[tablename])}
+        else:
+            identity = {"id": values["id"]}
+
+        self._tables[tablename][identity['id']] = {**values, **identity}
+
+        return identity
 
     def update(self, tablename: str, criteria: dict, values: dict) -> None:
         if (row := self.find_one(tablename, criteria)) is not None:

@@ -79,18 +79,9 @@ class Mapper[TMappedEntity]:
     def save(self, entity: TMappedEntity) -> TMappedEntity:
         """Saves an entity to the database, either inserting (if not mapped yet) or updating it (if a mapping identity
         is present)."""
-        print(entity)
         storage = self.storages[_default]
         values = self._get_known_modified_values(entity)
         related_values = self._get_known_modified_related_values(entity)
-        print(
-            f"{self.__tablename__} {type(self).__name__}::save(values=",
-            values,
-            ", related_values=",
-            related_values,
-            ")",
-            sep="",
-        )
 
         if (identity := entity.get_identity()) is not None:
             # existing object, update
