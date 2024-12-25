@@ -1,6 +1,6 @@
-from hdm.storages.base import ResultMapping, Storage
+from hdm.storages.base import Storage
+from hdm.types.mappings import ResultMapping
 
 __all__ = [
-    "ResultMapping",
     "Storage",
 ]

@@ -1,9 +1,12 @@
+from copyreg import pickle
 from os import PathLike
 from typing import Optional, Iterable
 
-from hdm.storages import Storage, ResultMapping
+from hdm.storages import Storage
+from hdm.types.mappings import ResultMapping
 from pathlib import Path
-
+import os.path
+import pickle
 
 
 def _get_relative_path_from_criteria(criteria: dict) -> Path:
@@ -15,11 +18,10 @@ def _get_relative_path_from_criteria(criteria: dict) -> Path:
 
     pk = str(criteria["id"])
 
-
     if len(pk) <= 4:
-        return Path('__') / pk
+        return Path("__") / pk
     if len(pk) <= 6:
-        return Path(pk[:2]) / '__'/ pk[2:]
+        return Path(pk[:2]) / "__" / pk[2:]
     return Path(pk[:2]) / pk[2:4] / pk[4:]
 
 
@@ -29,26 +31,38 @@ class FileSystemStorage(Storage):
 
     def find_one(self, tablename: str, criteria: dict) -> Optional[ResultMapping]:
         filename = self.path / _get_relative_path_from_criteria(criteria)
-        print(filename)
-        if not filename.exists():
+        if not os.path.exists(filename):
             return None
+        with open(filename, "rb") as f:
+            return pickle.load(f)
 
-        ...
-        raise NotImplementedError("XXXXXX")
+    def find_all(self):
+        for root, _, files in os.walk(self.path):
+            for file in files:
+                with open(os.path.join(root, file), "rb") as f:
+                    yield pickle.load(f)
 
     def find_many(
-            self,
-            tablename: str,
-            criteria: dict,
-            *,
-            limit: Optional[int] = None,
-            offset: Optional[int] = None
+        self, tablename: str, criteria: dict, *, limit: Optional[int] = None, offset: Optional[int] = None
     ) -> Iterable[ResultMapping]:
-        pass
+        raise NotImplementedError(f'{type(self).__name__} does not implement "find_many" method.')
 
     def insert(self, tablename: str, values: dict) -> ResultMapping:
-        filename = self.path / _get_relative_path_from_criteria({'id': values['id']})
-        print(filename)
+        identity = {"id": values["id"]}
+        filename = self.path / _get_relative_path_from_criteria(identity)
+        dirname = os.path.dirname(filename)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+        with open(filename, "wb+") as f:
+            pickle.dump(values, f)
+        return identity
 
     def update(self, tablename: str, criteria: dict, values: dict) -> None:
         pass
+
+    def delete(self, tablename: str, identity: dict) -> None:
+        filename = self.path / _get_relative_path_from_criteria(identity)
+        if os.path.exists(filename):
+            os.remove(filename)
+        else:
+            raise FileNotFoundError(f"File {filename} not found.")

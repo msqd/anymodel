@@ -79,6 +79,7 @@ dependencies = [
     { name = "psycopg2-binary" },
     { name = "pydantic" },
     { name = "pyheck" },
+    { name = "python-bsonjs" },
     { name = "sqlalchemy" },
 ]
 
@@ -93,6 +94,7 @@ requires-dist = [
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "pydantic", specifier = ">=2.9.2" },
     { name = "pyheck", specifier = ">=0.1.5" },
+    { name = "python-bsonjs", specifier = ">=0.5.0" },
     { name = "sqlalchemy", specifier = ">=2.0.36" },
 ]
 
@@ -291,6 +293,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/8b/6c/62bbd536103af674e227c41a8f3dcd022d591f6eed5facb5a0f31ee33bbc/pytest-8.3.3.tar.gz", hash = "sha256:70b98107bd648308a7952b06e6ca9a50bc660be218d53c257cc1fc94fda10181", size = 1442487 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6b/77/7440a06a8ead44c7757a64362dd22df5760f9b12dc5f11b6188cd2fc27a0/pytest-8.3.3-py3-none-any.whl", hash = "sha256:a6853c7375b2663155079443d2e45de913a911a11d669df02a50814944db57b2", size = 342341 },
+]
+
+[[package]]
+name = "python-bsonjs"
+version = "0.5.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/23/76/456986bd73b8b892b864e89f91aa5136abba2a5f61ffe2754c9873006318/python_bsonjs-0.5.0.tar.gz", hash = "sha256:9fc69f59efcee0efdca4422b0358ad40bbca99fbafd64368ec593219de30b155", size = 185499 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/56/19/b6a77d7e4d706606ab2320d30468603949cf04fbb413c53d5ba8e536e36d/python_bsonjs-0.5.0-cp37-abi3-macosx_10_9_universal2.whl", hash = "sha256:547376e278779b0918ff91183e05c3c318bfed1472e1530cddf4b4750dbcbba3", size = 219178 },
+    { url = "https://files.pythonhosted.org/packages/87/2b/1b676615b1ea87536875794c13a6c443fec9b935cde51312c38c66d17466/python_bsonjs-0.5.0-cp37-abi3-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:fdcc6e85278d8dd251ca948e973fdcdae243d34cc07808b14d88bb5e6cc543e8", size = 317494 },
+    { url = "https://files.pythonhosted.org/packages/b0/bb/0d17822513e4f5aa1f9e52b779958870d5cf0d1e81f5a6c2a4c0f80cfb05/python_bsonjs-0.5.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:319aea1fb63f5cb4a7b374f7856486cef1efea47a5bdb9fcdeb95a310a4f14e0", size = 343852 },
+    { url = "https://files.pythonhosted.org/packages/38/8e/ced4fe65a1822c787620bc74691e93352b1b1c3f228cd7db8f9527f16581/python_bsonjs-0.5.0-cp37-abi3-win32.whl", hash = "sha256:a99b85f35e112e9a7ff705644ffe7368f35ac8ce2dc883c7ae6db55b48add359", size = 103269 },
+    { url = "https://files.pythonhosted.org/packages/fc/59/8349c74153168e7dd5b5db7ddeaf012f756fc5bec86df4cf5d127ac99a30/python_bsonjs-0.5.0-cp37-abi3-win_amd64.whl", hash = "sha256:f5ec59aabf823fc0b27eb2fb8ee3c1d3f930fa3f3b2eb323ee1f5576f2ad6e8b", size = 119964 },
 ]
 
 [[package]]

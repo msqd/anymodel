@@ -1,30 +1,62 @@
+from functools import cached_property
+from typing import Optional
+
 from pydantic import BaseModel
 
 _IDENTITY_ATTRIBUTE = "__identity__"
 
 
-class Entity(BaseModel):
-    def set_clean(self):
-        self.__pydantic_fields_set__ = set()
+class MappingState:
+    def __init__(self, entity):
+        self._entity = entity
+        self._identity = None
+        self._store = None
 
-    def is_clean(self):
-        return not len(self.__pydantic_fields_set__)
+    @property
+    def transient(self):
+        """is the related entity transiant, aka not mapped to anything (yet)?"""
+        return self.identity is None
 
-    def get_identity(self) -> dict | None:
-        return getattr(self, _IDENTITY_ATTRIBUTE, None)
+    @property
+    def dirty(self):
+        """is the entity modified since the last clean state (from storage or defaults)?"""
+        return bool(len(self._entity.__pydantic_fields_set__))
 
-    def set_identity(self, identity: dict):
-        setattr(self, _IDENTITY_ATTRIBUTE, {k: str(identity[k]) for k in identity})
+    @property
+    def identity(self):
+        return self._identity
 
-        # maybe not the right place
-        self.__dict__.update(identity)
+    @identity.setter
+    def identity(self, value: dict):
+        self._identity = {k: str(value[k]) for k in value}
+
+        # XXX maybe not the right place, should the state really update the entity ???? And if so, should it mark it
+        # as clean ?
+        self._entity.__dict__.update(value)
+
+    @property
+    def store(self):
+        return self._store
+
+    @store.setter
+    def store(self, value: Optional[str]):
+        self._store = value
 
     def detach(self):
-        delattr(self, _IDENTITY_ATTRIBUTE)
+        self._identity = None
+
+    def set_clean(self):
+        self._entity.__pydantic_fields_set__ = set()
+
+
+class Entity(BaseModel):
+    @cached_property
+    def __state__(self):
+        """lazy initialized object to store the mapping state of the entity."""
+        return MappingState(self)
 
     def __repr__(self):
-        return f"<{type(self).__name__} {super().__str__()}>"
-
-
-def mapper(mixed):
-    return getattr(mixed, "__mapper__", None)
+        transient = "~" if self.__state__.transient else ""
+        dirty = "*" if self.__state__.dirty else ""
+        store = f" (&{self.__state__.store})" if self.__state__.store else ""
+        return f"<{transient}{type(self).__name__}{dirty} {hex(id(self))}> {super().__str__()}{store}>"

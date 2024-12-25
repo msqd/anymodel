@@ -3,7 +3,8 @@ from typing import Union, Any, override, Optional, Iterable
 from sqlalchemy import URL, create_engine, MetaData, Column, Integer, String, Table
 
 from hdm.types.entity import Entity
-from hdm.storages import Storage, ResultMapping
+from hdm.storages import Storage
+from hdm.types.mappings import ResultMapping
 from hdm.utilities.migrations import automigrate
 
 

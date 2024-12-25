@@ -9,6 +9,7 @@ dependencies = [
     "psycopg2-binary>=2.9.10",
     "pydantic>=2.9.2",
     "pyheck>=0.1.5",
+    "python-bsonjs>=0.5.0",
     "sqlalchemy>=2.0.36",
 ]
 

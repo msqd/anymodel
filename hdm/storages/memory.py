@@ -1,7 +1,8 @@
 from collections import defaultdict
 from typing import Iterable, Optional
 
-from hdm.storages import Storage, ResultMapping
+from hdm.storages import Storage
+from hdm.types.mappings import ResultMapping
 from hdm.types.entity import Entity
 
 
@@ -21,14 +22,8 @@ class MemoryStorage(Storage):
         for row in self.find_many(tablename, criteria, limit=1):
             return row
 
-
     def find_many(
-        self,
-        tablename: str,
-        criteria: dict,
-        *,
-        limit: Optional[int] = None,
-        offset: Optional[int] = None
+        self, tablename: str, criteria: dict, *, limit: Optional[int] = None, offset: Optional[int] = None
     ) -> Iterable[ResultMapping]:
         limit, offset = max(limit, 0) if limit is not None else None, max(offset or 0, 0)
         current = 0
@@ -54,13 +49,13 @@ class MemoryStorage(Storage):
                 current += 1
 
     def insert(self, tablename: str, values: dict) -> ResultMapping:
-        if not "id" in values:
+        if "id" not in values:
             self._autoincrements[tablename] += 1
-            identity = {'id': str(self._autoincrements[tablename])}
+            identity = {"id": str(self._autoincrements[tablename])}
         else:
             identity = {"id": values["id"]}
 
-        self._tables[tablename][identity['id']] = {**values, **identity}
+        self._tables[tablename][identity["id"]] = {**values, **identity}
 
         return identity
 

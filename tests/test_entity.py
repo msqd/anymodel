@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from hdm.types.entity import mapper
+from hdm.types.utils import mapper
 from ._models import Hero
 
 
