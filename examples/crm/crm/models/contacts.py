@@ -1,7 +1,7 @@
 from typing import Optional, List
 
-from hdm.types.entity import Entity
-from hdm.mapper import Mapper
+from anymodel.types.entity import Entity
+from anymodel.mapper import Mapper
 
 
 class Contact(Entity):

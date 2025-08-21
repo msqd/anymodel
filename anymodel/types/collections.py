@@ -1,10 +1,22 @@
-from typing import Sequence, Any, Self
+"""Type-safe collections for entity relationships.
+
+This module provides the Collection class for managing groups of entities
+with support for lazy loading.
+"""
+
+from typing import Any, Self, Sequence
 
 from pydantic import GetCoreSchemaHandler
 from pydantic_core import core_schema
 
 
 class Collection(Sequence):
+    """A lazy-loadable collection of entities.
+    
+    Collections can be initialized with either a sequence of entities
+    or a loader function that returns entities when called. This supports
+    lazy loading of related entities.
+    """
     def __init__(self, seq_or_loader):
         if callable(seq_or_loader):
             self._loader = seq_or_loader

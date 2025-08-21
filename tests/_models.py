@@ -1,13 +1,13 @@
 from typing import Optional
 
-from hdm.types.entity import Entity
-from hdm.mapper import Mapper
+from anymodel import Entity, Field
 
 
 class Hero(Entity):
-    id: Optional[int] = None
+    id: Optional[int] = Field(None, primary_key=True)
     name: str
 
 
-class HeroMapper(Mapper[Hero]):
-    pass
+class SuperPower(Entity):
+    id: Optional[int] = Field(None, primary_key=True)
+    name: str

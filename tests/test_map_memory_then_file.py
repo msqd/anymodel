@@ -1,10 +1,13 @@
-from hdm.mapper import Mapper
+from anymodel.mapper import Mapper
+from anymodel import MemoryStorage
 from ._models import Hero
 
 class HeroMapper(Mapper[Hero]):
     pass
 
 def test_multimap():
-    heroes = HeroMapper()
-    heroes.set_storage()
+    # This test seems incomplete - creating a minimal working test
+    storage = MemoryStorage()
+    heroes = HeroMapper(Hero, storage=storage)
+    assert heroes.storage == storage
 

@@ -1,12 +1,17 @@
-from copyreg import pickle
-from os import PathLike
-from typing import Optional, Iterable
+"""Filesystem-based storage implementation.
 
-from hdm.storages import Storage
-from hdm.types.mappings import ResultMapping
-from pathlib import Path
+This module provides a storage backend that persists entities as files
+on the filesystem, with hierarchical directory structure for efficient access.
+"""
+
 import os.path
 import pickle
+from os import PathLike
+from pathlib import Path
+from typing import Iterable, Optional
+
+from anymodel.storages import Storage
+from anymodel.types.mappings import ResultMapping
 
 
 def _get_relative_path_from_criteria(criteria: dict) -> Path:
@@ -26,6 +31,11 @@ def _get_relative_path_from_criteria(criteria: dict) -> Path:
 
 
 class FileSystemStorage(Storage):
+    """Storage backend that persists entities to the filesystem.
+    
+    Stores entities as pickled files in a hierarchical directory structure
+    based on entity IDs for efficient access to large numbers of entities.
+    """
     def __init__(self, path: str | PathLike):
         self.path = Path(path)
 

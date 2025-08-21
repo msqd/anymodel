@@ -1,9 +1,20 @@
-from typing import Mapping, Any, Iterable
+"""Result mapping types for storage operations.
+
+This module provides types for handling results from storage operations,
+including metadata about the storage source.
+"""
+
+from typing import Any, Iterable, Mapping
 
 ResultMapping = Mapping[str, Any]
 
 
 class ResultMappingView(ResultMapping):
+    """A view over a result mapping with metadata support.
+    
+    Wraps a result mapping and adds metadata tracking capabilities
+    for storage-specific information.
+    """
     def __init__(self, mapping: ResultMapping, **metadata):
         self.mapping = mapping
 

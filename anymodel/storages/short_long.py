@@ -1,10 +1,22 @@
-from typing import Optional, Iterable
+"""Composite storage implementation with short and long-term storage.
 
-from .base import Storage
+This module provides a storage backend that combines two storage backends,
+typically for implementing hot/cold storage strategies.
+"""
+
+from typing import Iterable, Optional
+
+from .. import Mapper
 from ..types.mappings import ResultMapping, ResultMappingView
+from .base import Storage
 
 
-class WriteAheadStorage(Storage):
+class ShortLongStorage(Storage):
+    """Composite storage with short-term and long-term backends.
+    
+    Combines two storage backends to implement tiered storage strategies,
+    checking short-term storage first before falling back to long-term storage.
+    """
     def __init__(self, short_storage: Storage, long_storage: Storage):
         self.short_storage = short_storage
         self.long_storage = long_storage
@@ -33,3 +45,11 @@ class WriteAheadStorage(Storage):
         for entity in self.short_storage.find_all():
             self.long_storage.insert(tablename, entity)
             self.short_storage.delete(tablename, {"id": entity["id"]})
+
+    def add_table(self, mapper: Mapper):
+        self.short_storage.add_table(mapper)
+        self.long_storage.add_table(mapper)
+
+    def migrate(self, **kwargs):
+        self.short_storage.migrate(**kwargs)
+        self.long_storage.migrate(**kwargs)

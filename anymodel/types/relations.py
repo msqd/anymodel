@@ -1,9 +1,19 @@
-from abc import abstractmethod, ABC
+"""Entity relationship definitions.
 
-from hdm.mapper import Mapper
+This module provides classes for defining relationships between entities,
+supporting lazy loading and automatic persistence of related entities.
+"""
+
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from anymodel.mapper import Mapper # noqa: F401
 
 
 class Relation(ABC):
+    """Abstract base class for entity relationships."""
     @abstractmethod
     def get_find_callback_for(self, mapper, entity):
         raise NotImplementedError
@@ -14,7 +24,12 @@ class Relation(ABC):
 
 
 class OneToManyRelation(Relation):
-    def __init__(self, mapper: Mapper):
+    """Represents a one-to-many relationship between entities.
+    
+    Manages the loading and persistence of related entities in
+    a one-to-many relationship.
+    """
+    def __init__(self, mapper: "Mapper"):
         self.mapper = mapper
 
     def get_find_callback_for(self, mapper, row):

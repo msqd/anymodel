@@ -1,8 +1,8 @@
-from pydantic import Field
+from sqlmodel import Field
 
-from .types import Collection, Entity, OneToManyRelation
-from .storages.memory import MemoryStorage
 from .mapper import Mapper
+from .storages.memory import MemoryStorage
+from .types import Collection, Entity, OneToManyRelation
 
 __all__ = [
     "Collection",

@@ -1,6 +1,6 @@
 from typing import MutableMapping, Mapping
 
-from hdm.storages import Storage
+from anymodel.storages import Storage
 
 
 class MemoryTable:

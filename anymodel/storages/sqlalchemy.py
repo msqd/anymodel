@@ -1,14 +1,27 @@
-from typing import Union, Any, override, Optional, Iterable
+"""SQLAlchemy-based storage implementation.
 
-from sqlalchemy import URL, create_engine, MetaData, Column, Integer, String, Table
+This module provides a storage backend that persists entities to
+SQL databases using SQLAlchemy, with support for automatic migrations.
+"""
 
-from hdm.types.entity import Entity
-from hdm.storages import Storage
-from hdm.types.mappings import ResultMapping
-from hdm.utilities.migrations import automigrate
+from typing import Any, Iterable, Optional, Union, override
+
+from sqlalchemy import URL, Column, MetaData, Table, create_engine
+from sqlmodel.main import get_sqlalchemy_type
+
+from anymodel import Mapper
+from anymodel.storages import Storage
+from anymodel.types.entity import Entity
+from anymodel.types.mappings import ResultMapping
+from anymodel.utilities.migrations import automigrate
 
 
 class SqlAlchemyStorage(Storage):
+    """Storage backend for SQL databases via SQLAlchemy.
+    
+    Provides persistence to any SQLAlchemy-supported database with
+    automatic schema migration capabilities.
+    """
     def __init__(self, url: Union[str, URL], **kwargs: Any):
         self.engine = create_engine(url, **kwargs)
         self.metadata = MetaData()
@@ -70,23 +83,32 @@ class SqlAlchemyStorage(Storage):
         return entity
 
     @override
-    def add_table(self, tablename: str, primary_key: Iterable[str], fields: Iterable[str]):
-        if tablename in self.tables:
-            raise ValueError(f'Table for "{tablename}" already registered.')
+    def add_table(self, mapper: Mapper):
+        if mapper.__tablename__ in self.tables:
+            raise ValueError(f'Table for "{mapper.__tablename__}" already registered.')
 
         columns = []
 
-        for field in primary_key:
-            columns.append(Column(field, Integer, primary_key=True))
+        for field in mapper.primary_key:
+            field_info = mapper.__type__.model_fields[field]
+            columns.append(Column(field, get_sqlalchemy_type(field_info), primary_key=True))
 
-        for field in fields:
-            columns.append(Column(field, String))
+        for field in mapper.fields:
+            if field in mapper.primary_key:
+                continue
+            field_info = mapper.__type__.model_fields[field]
+            columns.append(Column(field, get_sqlalchemy_type(field_info)))
 
-        self.tables[tablename] = Table(tablename, self.metadata, *columns)
+        self.tables[mapper.__tablename__] = Table(mapper.__tablename__, self.metadata, *columns)
 
     @override
-    def setup(self):
-        automigrate(self.engine, self.metadata)
+    def migrate(self, **kwargs):
+        old_echo = self.engine.echo
+        self.engine.echo = kwargs.get("echo", old_echo)
+        try:
+            automigrate(self.engine, self.metadata)
+        finally:
+            self.engine.echo = old_echo
 
 
 def _as_criteria(table: Table, criteria: dict[str, Any]) -> list:

@@ -1,11 +1,11 @@
 from argparse import Namespace
 from typing import Optional
 
-from hdm.mapper import Mapper
-from hdm.storages.memory import MemoryStorage
+from anymodel.mapper import Mapper
+from anymodel.storages.memory import MemoryStorage
 
-from hdm import Collection, Entity
-from hdm.types.relations import OneToManyRelation
+from anymodel import Collection, Entity
+from anymodel.types.relations import OneToManyRelation
 
 mappers = Namespace()
 

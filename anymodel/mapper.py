@@ -1,23 +1,34 @@
-from typing import Type, Iterable, TYPE_CHECKING, Optional, Mapping
+"""Data mapper implementation for entity persistence.
+
+This module provides the Mapper class which handles the persistence of entities
+to various storage backends while maintaining separation between domain logic
+and storage concerns.
+"""
+
+from functools import cached_property
+from typing import TYPE_CHECKING, Iterable, Mapping, Optional, Type
 
 from pyheck import snake
 
-from hdm.types.collections import Collection
-from hdm.types.entity import Entity
-from hdm.types.utils import getmeta
-from hdm.utilities.identity_map import IdentityMap
+from anymodel.types.collections import Collection
+from anymodel.types.entity import Entity
+from anymodel.types.utils import getmeta
+from anymodel.utilities.identity_map import IdentityMap
 
 if TYPE_CHECKING:
-    from hdm.storages import Storage
-    from hdm.types.relations import Relation
+    from anymodel.storages import Storage
+    from anymodel.types.relations import Relation
 
 
 class Mapper[TMappedEntity]:
+    """Maps entities to storage backends.
+    
+    The Mapper class handles all persistence operations for a specific entity type,
+    including CRUD operations, identity mapping, and relation management.
+    """
     __type__: Type[TMappedEntity] = None
     __tablename__: str = None
 
-    primary_key: Iterable[str] = ("id",)
-    fields: Iterable[str] = ()
     relations: Mapping[str, "Relation"] = None
 
     storage: "Storage"
@@ -28,8 +39,6 @@ class Mapper[TMappedEntity]:
         new_object = super().__new__(cls)
 
         cls._infer_type_if_possible_and_necessary(new_object)
-        if isinstance(new_object.primary_key, str):
-            new_object.primary_key = (new_object.primary_key,)
 
         return new_object
 
@@ -37,7 +46,6 @@ class Mapper[TMappedEntity]:
         self,
         entity_type: Optional[Type[Entity]] = None,
         *,
-        fields: Optional[Iterable[str]] = None,
         relations: Optional[Mapping[str, "Relation"]] = None,
         storage: "Storage",
         cache: Optional[IdentityMap] = None,
@@ -49,11 +57,24 @@ class Mapper[TMappedEntity]:
         if self.__tablename__ is None:
             self.__tablename__ = snake(self.__type__.__name__)
 
-        self.fields = fields or self.fields
         self.relations = relations or self.relations or {}
         self.storage = storage
 
         self._cache = cache
+
+        # XXX should the mapper do this ? why this and not migrations ?
+        self.storage.add_table(self)
+
+    @cached_property
+    def fields(self):
+        return self.__type__.model_fields.keys()
+
+    @cached_property
+    def primary_key(self):
+        def is_primary_key(x):
+            return getattr(x, "primary_key", False)
+
+        return tuple((k for k, v in self.__type__.model_fields.items() if is_primary_key(v)))
 
     def save(self, entity: TMappedEntity) -> TMappedEntity:
         """Saves an entity to the database, either inserting (if not mapped yet) or updating it (if a mapping identity
@@ -70,6 +91,7 @@ class Mapper[TMappedEntity]:
             # new object, insert
             new_identity = self.storage.insert(self.__tablename__, values)
             entity.__state__.identity = new_identity
+            entity.__state__.set_clean()
 
         for _field, _related_entities in related_values.items():
             relation = self.relations[_field]
