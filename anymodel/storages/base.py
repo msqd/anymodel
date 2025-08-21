@@ -8,10 +8,11 @@ from anymodel.types.mappings import ResultMapping
 
 class Storage:
     """Abstract base class for storage backends.
-    
+
     All storage implementations must inherit from this class and implement
     the required methods for CRUD operations and schema management.
     """
+
     def add_table(self, mapper: Mapper): ...
     def migrate(self, **kwargs): ...
     def find_one(self, tablename: str, criteria: dict) -> Optional[ResultMapping]: ...

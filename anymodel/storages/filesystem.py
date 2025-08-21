@@ -32,10 +32,11 @@ def _get_relative_path_from_criteria(criteria: dict) -> Path:
 
 class FileSystemStorage(Storage):
     """Storage backend that persists entities to the filesystem.
-    
+
     Stores entities as pickled files in a hierarchical directory structure
     based on entity IDs for efficient access to large numbers of entities.
     """
+
     def __init__(self, path: str | PathLike):
         self.path = Path(path)
 

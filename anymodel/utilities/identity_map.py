@@ -14,10 +14,11 @@ Identity = tuple[str, ...]
 
 class IdentityMap:
     """Maintains a single instance per entity identity.
-    
+
     Uses weak references to allow garbage collection of entities
     that are no longer referenced elsewhere in the application.
     """
+
     _map: MutableMapping[Identity, Any]
 
     def __init__(self):

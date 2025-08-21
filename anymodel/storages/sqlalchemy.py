@@ -18,10 +18,11 @@ from anymodel.utilities.migrations import automigrate
 
 class SqlAlchemyStorage(Storage):
     """Storage backend for SQL databases via SQLAlchemy.
-    
+
     Provides persistence to any SQLAlchemy-supported database with
     automatic schema migration capabilities.
     """
+
     def __init__(self, url: Union[str, URL], **kwargs: Any):
         self.engine = create_engine(url, **kwargs)
         self.metadata = MetaData()

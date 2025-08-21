@@ -12,12 +12,12 @@ def mapper(mixed):
 
 def getmeta(mixed, key, default=None):
     """Get metadata value from an object.
-    
+
     Args:
         mixed: Object to get metadata from
         key: Metadata key to retrieve
         default: Default value if key not found
-        
+
     Returns:
         The metadata value or default
     """

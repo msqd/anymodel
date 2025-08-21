@@ -11,10 +11,11 @@ from anymodel.types.mappings import ResultMapping
 
 class MemoryStorage(Storage):
     """In-memory storage backend.
-    
+
     Stores entities in dictionaries without persistence. Useful for testing
     and temporary data that doesn't need to survive application restarts.
     """
+
     def __init__(self):
         self._tables = defaultdict(dict)
         self._autoincrements = defaultdict(int)

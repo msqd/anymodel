@@ -13,10 +13,11 @@ from .base import Storage
 
 class ShortLongStorage(Storage):
     """Composite storage with short-term and long-term backends.
-    
+
     Combines two storage backends to implement tiered storage strategies,
     checking short-term storage first before falling back to long-term storage.
     """
+
     def __init__(self, short_storage: Storage, long_storage: Storage):
         self.short_storage = short_storage
         self.long_storage = long_storage

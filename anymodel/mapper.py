@@ -22,10 +22,11 @@ if TYPE_CHECKING:
 
 class Mapper[TMappedEntity]:
     """Maps entities to storage backends.
-    
+
     The Mapper class handles all persistence operations for a specific entity type,
     including CRUD operations, identity mapping, and relation management.
     """
+
     __type__: Type[TMappedEntity] = None
     __tablename__: str = None
 

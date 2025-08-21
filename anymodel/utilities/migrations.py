@@ -7,14 +7,14 @@ using Alembic.
 
 def automigrate(engine, metadata):
     """Automatically migrate database schema to match metadata.
-    
+
     Detects differences between the current database schema and the
     provided metadata, then applies the necessary migrations.
-    
+
     Args:
         engine: SQLAlchemy engine connected to the database
         metadata: SQLAlchemy metadata describing the desired schema
-    
+
     See: https://alembic.sqlalchemy.org/en/latest/cookbook.html#run-alembic-operation-objects-directly-as-in-from-autogenerate
     """
     from alembic.autogenerate import produce_migrations

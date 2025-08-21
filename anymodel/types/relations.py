@@ -9,11 +9,12 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from anymodel.mapper import Mapper # noqa: F401
+    from anymodel.mapper import Mapper  # noqa: F401
 
 
 class Relation(ABC):
     """Abstract base class for entity relationships."""
+
     @abstractmethod
     def get_find_callback_for(self, mapper, entity):
         raise NotImplementedError
@@ -25,10 +26,11 @@ class Relation(ABC):
 
 class OneToManyRelation(Relation):
     """Represents a one-to-many relationship between entities.
-    
+
     Manages the loading and persistence of related entities in
     a one-to-many relationship.
     """
+
     def __init__(self, mapper: "Mapper"):
         self.mapper = mapper
 

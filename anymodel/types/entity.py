@@ -14,10 +14,11 @@ _IDENTITY_ATTRIBUTE = "__identity__"
 
 class MappingState:
     """Tracks the persistence state of an entity.
-    
+
     Manages whether an entity is transient, dirty, or clean,
     and maintains the entity's identity in the storage system.
     """
+
     def __init__(self, entity):
         self._entity = entity
         self._identity = None
@@ -78,11 +79,12 @@ class MappingState:
 
 class Entity(BaseModel):
     """Base class for domain entities.
-    
+
     Extends Pydantic's BaseModel with state tracking capabilities
     for use with the data mapper pattern. Entities track their
     modification state and storage identity.
     """
+
     @cached_property
     def __state__(self):
         """lazy initialized object to store the mapping state of the entity."""
