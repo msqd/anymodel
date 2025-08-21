@@ -1,4 +1,4 @@
-# AnyModel – Data Mapper for Python, supporting any underlying storage combination
+# AnyModel – Data Mapper for Python
 
 `anymodel` is a data mapper for python built on top pydantic providing a flexible storage layer.
 

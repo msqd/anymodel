@@ -136,7 +136,7 @@ def generate_module_rst(module_path: str, output_path: Path, package_name: str, 
                         defined_functions_full_paths[name] = full_path
                     else:
                         imported_functions.append(name)
-    except:
+    except Exception:
         # Fallback if module can't be imported
         defined_classes = [name for name, type_ in members if type_ == 'class']
         defined_functions = [name for name, type_ in members if type_ == 'function']

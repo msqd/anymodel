@@ -1,6 +1,5 @@
 """Sphinx configuration for AnyModel documentation."""
 
-import os
 import sys
 from pathlib import Path
 
