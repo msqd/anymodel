@@ -70,5 +70,21 @@ clean: ## Clean build artifacts
 	cd docs && make clean
 
 .PHONY: build
-build: ## Build package
+build: ## Build package (both wheel and sdist)
 	uv build
+
+.PHONY: wheel
+wheel: clean ## Build wheel distribution only
+	uv build --wheel
+
+.PHONY: sdist
+sdist: clean ## Build source distribution only
+	uv build --sdist
+
+.PHONY: publish
+publish: ## Publish package to PyPI (requires authentication)
+	uv publish
+
+.PHONY: publish-test
+publish-test: ## Publish package to TestPyPI for testing
+	uv publish --publish-url https://test.pypi.org/legacy/
